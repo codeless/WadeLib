@@ -1,0 +1,12 @@
+{
+	"name" : "codeless/wadelib",
+	"description" : "A tiny one-file library to be used for deploying web applications",
+	"license" : "MIT",
+	"keywords" : ["deploy"],
+	"homepage" : "https://www.github.com/codeless/wadelib",
+	"autoload": {
+		"psr-0": {
+			"WadeLib": "src"
+		}
+	}
+}
