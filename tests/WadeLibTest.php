@@ -1,5 +1,7 @@
 <?php
 
+require('vendor/autoload.php');
+use \Heartsentwined\FileSystemManager\FileSystemManager;
 require('src/WadeLib.php');
 
 class WadeLibTest extends PHPUnit_Framework_TestCase {
@@ -31,9 +33,14 @@ class WadeLibTest extends PHPUnit_Framework_TestCase {
 	 * Tests the recursively changing of filemodes.
 	 */
 	public function testRecursiveChmod() {
-		# Create a directory
+		# Compile a directory name
 		$dir = sys_get_temp_dir() . '/wadelib';
-		$rc = @mkdir($dir);
+
+		# Delete directory from earlier runs:
+		FileSystemManager::rrmdir($dir);
+
+		# Create a directory
+		$rc = mkdir($dir);
 
 		# Create a bunch of subfiles
 		$files = array();
@@ -46,9 +53,19 @@ class WadeLibTest extends PHPUnit_Framework_TestCase {
 		$rc = WadeLib::changeFilemode($dir, $newperm, true);
 		$this->assertEquals(true, $rc);
 
+		# Clear file status cache.
+		# Otherwise, during some testruns 
+		# problems may occur with invalid
+		# file-permissions cached by PHP:
+		clearstatcache();
+
 		# Loop through created files to check filemode
 		foreach ($files as $f) {
 			$rc = fileperms($f);
+			echo $f,PHP_EOL;
+			printf('Expecting %s, got %s' . PHP_EOL,
+				substr(sprintf('%o', $newperm), -4),
+				substr(sprintf('%o', $rc), -4));
 			$this->assertEquals(
 				substr(sprintf('%o', $newperm), -4),
 				substr(sprintf('%o', $rc), -4));

@@ -4,6 +4,9 @@
 	"license" : "MIT",
 	"keywords" : ["deploy"],
 	"homepage" : "https://www.github.com/codeless/wadelib",
+	"require-dev" : {
+		"heartsentwined/file-system-manager" : ">=1.1.1"
+	},
 	"autoload": {
 		"psr-0": {
 			"WadeLib": "src"
