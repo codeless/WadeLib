@@ -27,6 +27,11 @@ The idea behind this package is to integrate it into a PHP deployment script. Ex
 Through http://www.packagist.org.
 
 
+# History
+
+- Version 0.5.0 released on 2012-09-21
+
+
 # Credits and Bugreports
 
 WadeLib was written by Codeless (http://www.codeless.at/). All bugreports can be directed to more@codeless.at. Even better, bugreports are posted on the github-repository of this package: https://www.github.com/codeless/wadelib.

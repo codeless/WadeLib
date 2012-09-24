@@ -27,6 +27,11 @@ Title: Installation
 Through <http://www.packagist.org>.
 
 
+Title: History
+
+- Version 0.5.0 released on 2012-09-21
+
+
 Title: Credits and Bugreports
 
 WadeLib was written by Codeless (<http://www.codeless.at/>). All bugreports can be directed to more@codeless.at. Even better, bugreports are posted on the github-repository of this package: <https://www.github.com/codeless/wadelib>.

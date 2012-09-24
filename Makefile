@@ -21,7 +21,6 @@ install_nd2md:
 
 doc:
 	./nd2md.sh README.txt > README.md
-	./nd2md.sh HISTORY.txt > HISTORY.md
 
 update:
 	$(PHP) composer.phar update

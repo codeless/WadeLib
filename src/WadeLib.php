@@ -84,20 +84,43 @@ class WadeLib {
 	 *
 	 * Attempts to change the mode of the specified file.
 	 *
+	 * Parameters:
+	 *
+	 * 	$files - Path to file or folder. Can be either a string
+	 * 		or an array holding filepaths.
+	 * 	$mode - Mode to change to.
+	 * 	$recursive - In case of folder, should all subitems
+	 * 		get the new mode too? Can be either true or
+	 * 		false. Defaults to false.
+	 *
 	 * Returns:
 	 *
 	 * 	TRUE - on success
 	 * 	FALSE - on failure
 	 */
-	public static function changeFilemode($file, $mode) {
-		$rc = false;
+	public static function changeFilemode($files, $mode, $recursive=false) {
+		$rc = true;
 
-		if (is_file($file) || is_dir($file)) {
-			if (chmod($file, $mode)) {
-				$rc = true;
-				self::report('Succeeded to change filemode of ' . $file);
-			} else {
-				self::report('Failed to change filemode of ' . $file);
+		# If file is no array
+		if (!is_array($files)) {
+			# Create array
+			$files = array($files);
+		}
+
+		# Loop through array
+		foreach ($files as $f) {
+			# If entry is file or folder:
+			if (is_file($f) || is_dir($f)) {
+				$rc &= chmod($f, $mode);
+			}
+
+			# If entry is folder and recursive is set:
+			if (is_dir($f) && $recursive) {
+				# Collect all subfiles
+				$subfiles = glob($f . '/*');
+
+				# Recall this method with subfiles
+				$rc &= self::changeFilemode($subfiles, $mode, $recursive);
 			}
 		}
 
