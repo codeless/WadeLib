@@ -1,3 +1,5 @@
+**DISCONTINUED**
+
 WadeLib is a tiny one-file PHP library to be used for deploying web applications.
 
 
@@ -29,6 +31,7 @@ Through http://www.packagist.org.
 
 # History
 
+- Decided to discontinue this project on 2012-10-10
 - Version 0.5.0 released on 2012-09-21
 
 

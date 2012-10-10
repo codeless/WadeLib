@@ -30,6 +30,7 @@ class WadeLib {
 	 * Truncates the passed file to zero-length.
 	 */
 	public static function truncateFile($file) {
+		self::report('Truncating file ' . $file);
 		$handle = fopen($file, 'w+');
 		fclose($handle);
 	}
@@ -46,6 +47,8 @@ class WadeLib {
 	 * 	FALSE - on failure
 	 */
 	public static function createFile($file) {
+		self::report('Creating file ' . $file);
+
 		$rc = false;
 
 		# If file doesn't exist already
@@ -54,6 +57,7 @@ class WadeLib {
 			$rc = touch($file);
 		}
 
+		self::reportReturncode($rc);
 		return $rc;
 	}
 
@@ -69,12 +73,14 @@ class WadeLib {
 	 * 	FALSE - on failure. Also, if file doesn't exist.
 	 */
 	public static function deleteFile($file) {
+		self::report('Deleting file ' . $file);
 		$rc = false;
 
 		if (is_file($file)) {
 			$rc = unlink($file);
 		}
 
+		self::reportReturncode($rc);
 		return $rc;
 	}
 
@@ -99,6 +105,7 @@ class WadeLib {
 	 * 	FALSE - on failure
 	 */
 	public static function changeFilemode($files, $mode, $recursive=false) {
+		self::report('Changing filemode of ' . print_r($files, 1));
 		$rc = true;
 
 		# If file is no array
@@ -124,22 +131,30 @@ class WadeLib {
 			}
 		}
 
+		self::reportReturncode($rc);
 		return $rc;
 	}
 
 
 	public static function report($message) {
 		if (!isset(self::$cli)) {
-			self::$cli = (isset($argv)) ? true : false;
+			self::$cli = (php_sapi_name() == 'cli')
+				? true
+				: false;
 		}
 
 		if (self::$cli) {
-			echo $message,PHP_EOL;
+			echo $message;
+		} else {
+			echo '<p>',$message,'</p>';
 		}
+
+		echo PHP_EOL;
 	}
 
 
 	public static function downloadFile($url, $destination_folder=null) {
+		self::report('Downloading file ' . $url . ' to ' . $destination_folder);
 		# Compile destination_file:
 		$destination_file = $destination_folder . basename($url);
 
@@ -161,6 +176,9 @@ class WadeLib {
 
 
 	public static function extractZipfile($zipfile, $destination='.') {
+		self::report('Extracting zipfile ' . $zipfile . ' to ' . $destination);
+		$rc = false;
+
 		# Extract myself.zip:
 		if ($zipfile == 'myself.zip') {
 			$zipfile = self::$mydatafile;
@@ -169,13 +187,19 @@ class WadeLib {
 		# Extract zipfile:
 		$zip = new ZipArchive;
 		if ($zip->open($zipfile)) {
-			$zip->extractTo($destination);
+			$rc = $zip->extractTo($destination);
 			$zip->close();
+		} else {
+			self::report('Could not open zipfile');
 		}
+
+		self::reportReturncode($rc);
+		return $rc;
 	}
 
 
 	public static function appendToFile($appendage_file, $destination_file) {
+		self::report('Appending file ' . $appendage_file . ' to ' . $destination_file);
 		$rc = 0;
 
 		# Open file handles:
@@ -195,6 +219,7 @@ class WadeLib {
 			$rc = 1;
 		}
 
+		self::reportReturncode($rc);
 		return $rc;
 	}
 
@@ -223,13 +248,72 @@ class WadeLib {
 	 * and stores the binary data into a temporary file.
 	 */
 	public static function extractAppendedData() {
+		self::report('Extracting appended data');
+
 		# Open self:
 		$handle = fopen(__FILE__, 'rb');
-		fseek($handle, __COMPILER_HALT_OFFSET__);
+		if ($handle) {
+			# Seek the compiler halt offset:
+			if (fseek($handle, __COMPILER_HALT_OFFSET__) == 0) {
+				# Create temporary file:
+				self::$mydatafile = tempnam(
+					sys_get_temp_dir(),
+					'wadephp');
 
-		# Create temporary file:
-		self::$mydatafile = tempnam('/tmp', 'wadephp');
-		file_put_contents(self::$mydatafile, stream_get_contents($handle));
+				# If tempnam returned false, try it in the local dir:
+				if (!self::$mydatafile) {
+					self::$mydatafile = 'wadephp';
+				}
+
+				self::report('Temporary datafile: ' . self::$mydatafile);
+				if (file_put_contents(self::$mydatafile, stream_get_contents($handle))) {
+					self::report('Data written to temporary datafile');
+				} else {
+					self::report('Unable to write data to temporary datafile');
+				}
+			} else {
+				self::report('Could not find halt-offset');
+			}
+		} else {
+			self::report('Could not open myself (' . __FILE__ . ')');
+		}
+	}
+
+
+	private static function reportReturncode($rc) {
+		self::report('Operation returned ' . $rc);
+	}
+
+	private static function startUp() {
+		session_start();
+		session_regenerate_id();
+	}
+
+	public static function cleanUp() {
+		# Remove temporary file:
+		WadeLib::deleteFile(self::$mydatafile);
+	}
+
+	public static function authenticate($username, $password) {
+		return 0;
+		# If authentication formular has been posted
+			# Get username and password
+
+		# If username and password are already set
+			# If username and password are valid
+				# Continue with next step
+		# Else
+			# Output authentication formular
+
+
+		# Username and password already set?
+		if ($_SESSION[] && $_SESSION[]) {
+		}
+
+		# Output authentication form
+		# User provides input
+		# User submits form
+		# next step is processed
 	}
 
 };
