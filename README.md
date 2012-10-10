@@ -1,4 +1,4 @@
-**DISCONTINUED**
+**DISCONTINUED - do not use this library -- see history**
 
 WadeLib is a tiny one-file PHP library to be used for deploying web applications.
 
