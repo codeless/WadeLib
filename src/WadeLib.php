@@ -246,8 +246,21 @@ class WadeLib {
 	 * Extracts all the data stored in the current script from
 	 * the __COMPILER_HALT_OFFSET__ till the end of the script-file
 	 * and stores the binary data into a temporary file.
+	 *
+	 * Returns:
+	 *
+	 * 	TRUE - If appended data could get extracted
+	 * 	FALSE - If a failure occured or if there was no
+	 * 		appended data
 	 */
 	public static function extractAppendedData() {
+		$rc = false;
+
+		# If there's no data to extract
+		if (!defined('__COMPILER_HALT_OFFSET__')) {
+			return $rc;
+		}
+
 		self::report('Extracting appended data');
 
 		# Open self:
@@ -268,6 +281,7 @@ class WadeLib {
 				self::report('Temporary datafile: ' . self::$mydatafile);
 				if (file_put_contents(self::$mydatafile, stream_get_contents($handle))) {
 					self::report('Data written to temporary datafile');
+					$rc = true;
 				} else {
 					self::report('Unable to write data to temporary datafile');
 				}
@@ -277,6 +291,8 @@ class WadeLib {
 		} else {
 			self::report('Could not open myself (' . __FILE__ . ')');
 		}
+
+		return $rc;
 	}
 
 
@@ -307,8 +323,6 @@ class WadeLib {
 
 
 		# Username and password already set?
-		if ($_SESSION[] && $_SESSION[]) {
-		}
 
 		# Output authentication form
 		# User provides input

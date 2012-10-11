@@ -1,7 +1,7 @@
 {
 	"name" : "codeless/wadelib",
 	"description" : "A tiny one-file library to be used for deploying web applications",
-	"license" : "MIT",
+	"license" : "CC-BY-3.0",
 	"keywords" : ["deploy"],
 	"homepage" : "https://www.github.com/codeless/wadelib",
 	"require-dev" : {

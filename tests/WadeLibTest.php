@@ -105,4 +105,14 @@ class WadeLibTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+
+	public function testExtractAppendedData()
+	{
+		# Try to extract appended data of a file where
+		# no data has been appended:
+		$this->assertEquals(
+			false,
+			WadeLib::extractAppendedData());
+	}
+
 };
