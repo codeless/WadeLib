@@ -198,7 +198,16 @@ class WadeLib {
 	}
 
 
-	public static function appendToFile($appendage_file, $destination_file) {
+	public static function appendDataToScriptfile($datafile, $scriptfile) {
+		self::appendToFile($datafile, $scriptfile, '__halt_compiler();');
+	}
+
+
+	public static function appendToFile(
+		$appendage_file,
+		$destination_file,
+		$initialString=null)
+	{
 		self::report('Appending file ' . $appendage_file . ' to ' . $destination_file);
 		$rc = 0;
 
@@ -209,6 +218,10 @@ class WadeLib {
 		# Append file:
 		if ($appendage_handle && $destination_handle) {
 			while ($line = fgets($appendage_handle)) {
+				if ($initialString) {
+					$line = $initialString . $line;
+					$initialString = null;
+				}
 				fputs($destination_handle, $line);
 			}
 

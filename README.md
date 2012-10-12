@@ -29,6 +29,8 @@ Through http://www.packagist.org.
 
 # History
 
+- Version 0.6.0 released on 2012-10-11:
+	- Added the appendDataToScriptfile method
 - Version 0.5.1 released on 2012-10-11:
 	- Fixed the extractAppendedData() method to run even when there's no appended data
 	- Changed the license to CC-BY-3.0

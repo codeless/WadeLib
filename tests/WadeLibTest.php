@@ -115,4 +115,24 @@ class WadeLibTest extends PHPUnit_Framework_TestCase {
 			WadeLib::extractAppendedData());
 	}
 
+	public function testAppendToFile() {
+		# Appending two files file1 and file2;
+		# result should be the word "App\nend\n".
+		# For this test to don't destroy file1, it gets
+		# copied to a temporary directory:
+		$pseudoFile1 = tempnam(sys_get_temp_dir(), 'wadelib');
+		copy('tests/file1', $pseudoFile1);
+		WadeLib::appendToFile('tests/file2', $pseudoFile1);
+
+		$this->assertEquals("App\nend\n", file_get_contents($pseudoFile1));
+	}
+
+	public function testAppendDataToScriptfile() {
+		$pseudoFile1 = tempnam(sys_get_temp_dir(), 'wadelib');
+		copy('tests/file1', $pseudoFile1);
+		WadeLib::appendDataToScriptfile('tests/file2', $pseudoFile1);
+
+		$this->assertEquals("App\n__halt_compiler();end\n", file_get_contents($pseudoFile1));
+	}
+
 };
