@@ -156,22 +156,26 @@ class WadeLib {
 	public static function downloadFile($url, $destination_folder=null) {
 		self::report('Downloading file ' . $url . ' to ' . $destination_folder);
 		# Compile destination_file:
-		$destination_file = $destination_folder . basename($url);
+		$destination_file = $destination_folder . '/' . basename($url);
+		self::report('Downloading file ' . $url . ' as ' . $destination_file);
 
-		# Open file handles:
-		$extern_handle = fopen($url, 'r');
-		$local_handle = fopen($destination_file, 'w+');
+		# If file has not been downloaded yet
+		if (!is_file($destination_file)) {
+			# Open file handles:
+			$extern_handle = fopen($url, 'r');
+			$local_handle = fopen($destination_file, 'w+');
 
-		# "Download" extern file:
-		if ($extern_handle && $local_handle) {
-			while ($line = fgets($extern_handle)) {
-				fputs($local_handle, $line);
+			# "Download" extern file:
+			if ($extern_handle && $local_handle) {
+				while ($line = fgets($extern_handle)) {
+					fputs($local_handle, $line);
+				}
 			}
-		}
 
-		# Close handles:
-		fclose($extern_handle);
-		fclose($local_handle);
+			# Close handles:
+			fclose($extern_handle);
+			fclose($local_handle);
+		}
 	}
 
 
@@ -341,6 +345,27 @@ class WadeLib {
 		# User provides input
 		# User submits form
 		# next step is processed
+	}
+
+	/**
+	 * Function: installPhingManually
+	 *
+	 * Install Phing by downloading the Zip-Archive
+	 * and extracting it.
+	 */
+	public static function installPhingManually(
+		$downloadDirectory,
+		$installationDirectory)
+	{
+		# Download file:
+		WadeLib::downloadFile(
+			'http://www.phing.info/get/phing-2.4.12.zip',
+			$downloadDirectory);
+
+		# Extract Phing:
+		WadeLib::extractZipfile(
+			$downloadDirectory . '/phing-2.4.12.zip',
+			$installationDirectory);
 	}
 
 };

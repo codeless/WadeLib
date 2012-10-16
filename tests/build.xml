@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="wadelib_testbuild" default="dist">
+
+	<!-- ============================================  -->
+	<!-- (DEFAULT)  Target: dist                       --> 
+	<!-- ============================================  -->
+	<target name="dist">
+		<echo message="${host.os}" file="wadelib_testbuild" />
+	</target>
+
+</project>

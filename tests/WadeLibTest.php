@@ -135,4 +135,31 @@ class WadeLibTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("App\n__halt_compiler();end\n", file_get_contents($pseudoFile1));
 	}
 
+	public function testPhingInstallation()
+	{
+		$tmpDir = sys_get_temp_dir();
+
+		WadeLib::installPhingManually(
+			$tmpDir,
+			$tmpDir . '/phing');
+
+		# Start Phing with a test-buildfile
+		$phingDir = $tmpDir . '/phing';
+		$phingInclude = $phingDir . '/classes/';
+		ini_set('include_path', $phingInclude);
+		require($phingInclude . 'phing/Phing.php');
+		Phing::startup(); # Sets up the phing environment
+		Phing::start(array('-buildfile', 'tests/build.xml'));
+
+		# Check results of test-buildfile
+		$resultFile = __DIR__ . '/wadelib_testbuild';
+		$this->assertEquals(PHP_OS, file_get_contents($resultFile));
+
+		# Delete local files:
+		unlink($resultFile);
+
+		# Remove extracted Phing library:
+		FileSystemManager::rrmdir($phingDir);
+	}
+
 };

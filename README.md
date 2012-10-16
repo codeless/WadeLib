@@ -29,6 +29,9 @@ Through http://www.packagist.org.
 
 # History
 
+- Version 0.7.0 released on 2012-10-16:
+	- Added the installPhingManually method
+	- Altered the downloadFile method; the $destination_folder param is expected to contain NO trailing slash
 - Version 0.6.0 released on 2012-10-11:
 	- Added the appendDataToScriptfile method
 - Version 0.5.1 released on 2012-10-11:
